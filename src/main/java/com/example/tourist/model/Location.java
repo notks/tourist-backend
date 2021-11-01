@@ -1,6 +1,4 @@
 package com.example.tourist.model;
 
-public class Place {
-
-
+public class Location {
 }
