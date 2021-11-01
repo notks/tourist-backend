@@ -8,7 +8,7 @@ CREATE SCHEMA IF NOT EXISTS "public";
 
 -- ************************************** "Rating"
 
-CREATE TABLE IF NOT EXISTS "Rating"
+CREATE TABLE IF NOT EXISTS "Ratings"
 (
  "location_id" int NOT NULL,
  "grade"       int NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS "Rating"
  CONSTRAINT "FK_58" FOREIGN KEY ( "location_id" ) REFERENCES "Locations" ( "id" )
 );
 
-CREATE INDEX "fkIdx_60" ON "Rating"
+CREATE INDEX "fkIdx_60" ON "Ratings"
 (
  "location_id"
 );
