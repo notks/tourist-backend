@@ -16,21 +16,26 @@ import java.util.Optional;
 @Repository("userpsql")
 @Transactional
 public class UserRepository implements UserDao {
-    private static final String sql="select email,password from \"Users\" where password=?;";
+
     @Autowired
 JdbcTemplate jdbcTemplate;
     @Override
     public User validateUser(String email, String password) throws EtAuthException {
-
+        String sql="select email,password from Users where password=?;";
         User user = jdbcTemplate.queryForObject(
                 sql, new Object[] { password }, userRowMapper);
         return user;
     }
 
     @Override
-    public int registerUser(String email, String pwd) throws EtAuthException {
-
-        return 0;
+    public User registerUser(User user) throws EtAuthException {
+       String sql="insert into Users (password,email,created_at) values (?,?,now())";
+       
+       System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
+         jdbcTemplate.update(
+                sql, user.getPassword(),user.getEmail());
+        return user;
     }
 
     @Override

@@ -4,10 +4,8 @@ import com.example.tourist.model.User;
 import com.example.tourist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RequestMapping("login")
 @RestController
 public class AuthController {
@@ -19,8 +17,20 @@ public class AuthController {
         this.userService = userService;
     }
     @GetMapping()
-    public User getUser(@RequestParam("email") String email, @RequestParam("pwd") String password){
+    public User validateUser(@RequestParam("email") String email, @RequestParam("pwd") String password){
 
     return userService.getUser(email,password);
+    }
+@PostMapping(path = "register")
+    public String registerUser(@RequestBody User user){
+try{
+    userService.registerUser(user);
+    return "User created";
+}catch (Exception e){
+    System.out.println(e);
+    return "User not created";
+}
+
+
     }
 }

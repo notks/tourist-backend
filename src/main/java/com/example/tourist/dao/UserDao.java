@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserDao {
     User validateUser(String email, String password) throws EtAuthException;
-    int registerUser(String email,String pwd) throws EtAuthException;
+    User registerUser(User user) throws EtAuthException;
     int updatePassword(User user,String newPwd)throws EtAuthException;
     int updateEmail(User user,String newEmail)throws EtAuthException;
 

@@ -1,11 +1,13 @@
 package com.example.tourist.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class User {
     private int id;
     private String email;
     private String password;
 
-    public User(String email, String password) {
+    public User(@JsonProperty("email") String email, @JsonProperty("password") String password) {
         this.email = email;
         this.password = password;
     }
