@@ -4,9 +4,13 @@ const faker = require('faker');
 let city=faker.address.country();
 console.log(city)
 console.log(process.env.PGUSER)
-const pool = new Pool({
-    ssl: {rejectUnauthorized:false},
-  })
+//const pool = new Pool({
+  //  ssl: {rejectUnauthorized:false},
+  //})
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:root123@localhost:2345/testdb',
+    ssl: process.env.DATABASE_URL ? true : false
+})
 const seedCountries = async()=>{
 
   for(let i=0;i<50;i+=1){
@@ -30,7 +34,7 @@ pool.end()
 
 const seedCities = async()=>{
 
-  for(let i=60;i<110;i+=1){
+  for(let i=0;i<24;i+=1){
      
 let name=faker.address.city()
 console.log(name)
@@ -50,7 +54,7 @@ pool.end()
 }
 
    seedCities()
-
+//seedCountries();
 
 
 

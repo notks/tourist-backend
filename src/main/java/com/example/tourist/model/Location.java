@@ -2,6 +2,7 @@ package com.example.tourist.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 public class Location {
     private String Name;
     private String Description;

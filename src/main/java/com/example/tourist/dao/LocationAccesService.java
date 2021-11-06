@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Repository("fakeDao")
 public class LocationAccesService implements LocationDao{
     private static List<Location> DB=new ArrayList<>();
@@ -14,7 +16,13 @@ public class LocationAccesService implements LocationDao{
         return 1;
     }
     @Override
-    public List<Location> getAllLocations(){
-        return DB;
+    public Optional<Location> getLocationByName(String name){
+        return DB.stream().filter(location-> location.getName().equals(name)).findFirst();
+
+    }
+
+    @Override
+    public Optional<Location> getLocationByImportance(String status) {
+        return DB.stream().filter(location-> location.getIStatus().equals(status)).findFirst();
     }
 }
