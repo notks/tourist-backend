@@ -18,4 +18,7 @@ public class UserService {
     public User getUser(String email, String password){
     return userDao.validateUser(email,password);
     }
+    public User registerUser(User user){
+    return userDao.registerUser(user);
+    }
 }
