@@ -20,7 +20,9 @@ public class LocationService {
         return locationDao.insertLocation(location);
 
     }
- public Optional<Location> getByName(String name){
+ public List<Location> getByName(String name){
+
+    System.out.println("1");
     return locationDao.getLocationByName(name);
  }
  public Optional<Location> getByImportance(String status){

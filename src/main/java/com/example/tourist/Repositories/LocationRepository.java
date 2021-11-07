@@ -1,6 +1,9 @@
-package com.example.tourist.dao;
+package com.example.tourist.Repositories;
 
+import com.example.tourist.dao.LocationDao;
 import com.example.tourist.model.Location;
+import com.example.tourist.model.User;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -13,11 +16,11 @@ import java.util.List;
 import java.util.Optional;
 @Repository("postgres")
 
-public class LocationDaoPostgreSQL implements LocationDao {
+public class LocationRepository implements LocationDao {
 
 NamedParameterJdbcTemplate template;
 
-    public LocationDaoPostgreSQL(NamedParameterJdbcTemplate template) {
+    public LocationRepository(NamedParameterJdbcTemplate template) {
         this.template = template;
     }
 
@@ -31,7 +34,7 @@ NamedParameterJdbcTemplate template;
                 .addValue("city_id", 3)
                 .addValue("description", location.getDescription())
                 .addValue("longitude",location.getLongitude())
-                .addValue("createdat",new Timestamp(new Date().getTime()))
+                .addValue("created_at",new Timestamp(new Date().getTime()))
                 .addValue("latitude",location.getLatitude())
                         .addValue("status",location.getStatus())
                                 .addValue("importance_status",location.getIStatus());
@@ -41,11 +44,32 @@ NamedParameterJdbcTemplate template;
         return 1;
     }
     @Override
-    public Optional<Location> getLocationByName(String name){
+    public List<Location> getLocationByName(String name){
+        final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id WHERE Locations.name=:name";
+List<Location> locations= new ArrayList<>();
 
-        return null;
+System.out.println("2");
+SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("name", name);
+        locations=template.query(sql,param,locationRowMapper);
+        System.out.println(locations);
+        return locations;
 
     }
+
+    private RowMapper<Location> locationRowMapper =((rs, rowNum) -> {
+        return new Location(rs.getString("name")
+                ,rs.getString("description")
+                ,rs.getDouble("longitude")
+                ,rs.getDouble("latitude")
+                ,rs.getString("status")
+                ,rs.getString("importance_status")
+                ,rs.getString("cityName")
+                ,rs.getString("countryName")
+                ,rs.getTimestamp("created_at")
+                ,rs.getInt("id")
+                );
+    });
 
     @Override
     public Optional<Location> getLocationByImportance(String status) {

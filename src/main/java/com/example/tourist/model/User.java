@@ -7,7 +7,8 @@ public class User {
     private String email;
     private String password;
 
-    public User(@JsonProperty("email") String email, @JsonProperty("password") String password) {
+    public User(@JsonProperty("email") String email, @JsonProperty("password") String password,int id) {
+        this.id=id;
         this.email = email;
         this.password = password;
     }
