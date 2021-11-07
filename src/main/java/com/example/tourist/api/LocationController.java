@@ -5,6 +5,8 @@ import com.example.tourist.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @RequestMapping("location")
@@ -20,12 +22,18 @@ public class LocationController {
         locationService.addLocation(location);
     }
     @GetMapping(path="name/{name}")
-    public Location getAllLocations(@PathVariable("name") String name){
-    return locationService.getByName(name).orElse(null);
+    public List<Location> getLocationByName(@PathVariable("name") String name){
+    System.out.println("0");
+    return locationService.getByName(name);
 }
    @GetMapping(path="importance/{status}")
    public Location getByImportance(@PathVariable("status") String status){
       return locationService.getByImportance(status).orElse(null);
+   }
+   @GetMapping(path = "test")
+    public String test (HttpServletRequest request){
+    int userid=(Integer) request.getAttribute("id");
+    return "Id is: "+ userid;
    }
 
 }

@@ -15,10 +15,20 @@ public class UserService {
     public UserService(@Qualifier("userpsql") UserDao userDao) {
         this.userDao = userDao;
     }
-    public User getUser(String email, String password){
+    public String getUser(String email, String password){
     return userDao.validateUser(email,password);
     }
     public User registerUser(User user){
     return userDao.registerUser(user);
+    }
+    public String test(String email,String password){
+    User user=userDao.findUser(email,password);
+    return userDao.generateJWT(user);
+
+    }
+    public String getToken(String email,String password){
+    System.out.println("aaaaaaaaaa");
+   return userDao.generateJWT(userDao.findUser(email,password));
+
     }
 }

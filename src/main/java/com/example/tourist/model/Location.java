@@ -2,6 +2,8 @@ package com.example.tourist.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.sql.Timestamp;
+
 
 public class Location {
     private String Name;
@@ -9,21 +11,23 @@ public class Location {
     private double Longitude;
     private double Latitude;
     private String Status;
-    private double Timestamp;
+    private Timestamp Timestamp;
     private String IStatus;
     private String City;
+    private String Country;
     private double id;
 
-    public Location(@JsonProperty("name") String name,@JsonProperty("description") String description, @JsonProperty("long")double longitude,@JsonProperty("lat") double latitude, @JsonProperty("status") String status,@JsonProperty("istat") String IStatus,@JsonProperty("city") String city) {
+    public Location(@JsonProperty("name") String name, @JsonProperty("description") String description, @JsonProperty("long")double longitude, @JsonProperty("lat") double latitude, @JsonProperty("status") String status, @JsonProperty("istat") String IStatus, @JsonProperty("city") String city,String country, java.sql.Timestamp timestamp, int id) {
         Name = name;
         Description = description;
         Longitude = longitude;
         Latitude = latitude;
         Status = status;
-        Timestamp = Math.random();
+        Timestamp =timestamp ;
         this.IStatus = IStatus;
         City = city;
-        this.id =  Math.random();
+        this.Country=country;
+        this.id =  id;
     }
 
     public String getName() {
@@ -46,7 +50,7 @@ public class Location {
         return Status;
     }
 
-    public Double getTimestamp() {
+    public Timestamp getTimestamp() {
         return Timestamp;
     }
 
@@ -82,7 +86,7 @@ public class Location {
         Status = status;
     }
 
-    public void setTimestamp(double timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         Timestamp = timestamp;
     }
 
