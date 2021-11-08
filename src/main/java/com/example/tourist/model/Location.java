@@ -15,9 +15,22 @@ public class Location {
     private String IStatus;
     private String City;
     private String Country;
+    private int city_id;
+    private int country_id;
     private double id;
 
-    public Location(@JsonProperty("name") String name, @JsonProperty("description") String description, @JsonProperty("long")double longitude, @JsonProperty("lat") double latitude, @JsonProperty("status") String status, @JsonProperty("istat") String IStatus, @JsonProperty("city") String city,String country, java.sql.Timestamp timestamp, int id) {
+    public Location(
+            @JsonProperty("name") String name,
+            @JsonProperty("description") String description,
+            @JsonProperty("long")double longitude,
+            @JsonProperty("lat") double latitude,
+            @JsonProperty("status") String status,
+            @JsonProperty("istat") String IStatus,
+            @JsonProperty("city") String city,
+            String country,
+            java.sql.Timestamp timestamp,
+            int id
+    ) {
         Name = name;
         Description = description;
         Longitude = longitude;
@@ -29,6 +42,36 @@ public class Location {
         this.Country=country;
         this.id =  id;
     }
+
+    public void setCountry(String country) {
+        Country = country;
+    }
+
+    public void setCity_id(int city_id) {
+        this.city_id = city_id;
+    }
+
+    public void setCountry_id(int country_id) {
+        this.country_id = country_id;
+    }
+
+    public void setId(double id) {
+        this.id = id;
+    }
+
+    public String getCountry() {
+        return Country;
+    }
+
+    public int getCity_id() {
+        return city_id;
+    }
+
+    public int getCountry_id() {
+        return country_id;
+    }
+
+
 
     public String getName() {
         return Name;

@@ -2,6 +2,7 @@ package com.example.tourist.Repositories;
 
 import com.example.tourist.dao.LocationDao;
 import com.example.tourist.model.Location;
+import com.example.tourist.model.NewLocation;
 import com.example.tourist.model.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -25,13 +26,14 @@ NamedParameterJdbcTemplate template;
     }
 
     @Override
-    public int insertLocation(Location location){
-        final String sql = "insert into Locations(name, country_id , description,longitude,latitude,createdat,status,importance_status,city_id) values(:name, :country_id , :description,:longitude,:latitude,:createdat,:status,:importance_status,:city_id)";
+    public int insertLocation(NewLocation location){
+        final String sql = "insert into Locations(name, country_id , description,longitude,latitude,created_at,status,importance_status,city_id) values(:name, :country_id , :description,:longitude,:latitude,:created_at,:status,:importance_status,:city_id)";
+
 
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("name", location.getName())
-                .addValue("country_id", 5)
-                .addValue("city_id", 3)
+                .addValue("country_id", location.getCountry_id())
+                .addValue("city_id", location.getCity_id())
                 .addValue("description", location.getDescription())
                 .addValue("longitude",location.getLongitude())
                 .addValue("created_at",new Timestamp(new Date().getTime()))
@@ -39,13 +41,17 @@ NamedParameterJdbcTemplate template;
                         .addValue("status",location.getStatus())
                                 .addValue("importance_status",location.getIStatus());
 
+try {
+    template.update(sql,param);
+    return 1;
 
-        template.update(sql,param);
-        return 1;
+}catch (Exception e){
+return 0;
+}
     }
     @Override
     public List<Location> getLocationByName(String name){
-        final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id WHERE Locations.name=:name";
+        final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id WHERE Locations.name=:name and Locations.status='active'";
 List<Location> locations= new ArrayList<>();
 
 System.out.println("2");
@@ -72,8 +78,35 @@ SqlParameterSource param = new MapSqlParameterSource()
     });
 
     @Override
-    public Optional<Location> getLocationByImportance(String status) {
-        return null;
+    public List<Location> getLocationByImportance(String status) {
+        final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id WHERE Locations.importance_status=:status and Locations.status='active'";
+        SqlParameterSource param = new MapSqlParameterSource().addValue("status",status);
+
+        List<Location>locations =new ArrayList<Location>();
+        locations=template.query(sql,param,locationRowMapper);
+        return locations;
     }
 
+    @Override
+    public List<Location> getAllLocations() {
+        final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id where Locations.status='active'";
+
+        List<Location>locations =new ArrayList<Location>();
+        locations=template.query(sql,locationRowMapper);
+        return locations;
+    }
+
+    @Override
+    public boolean removeLocation(int id) {
+        String sql="delete from Locations where id=:id";
+        try {
+            SqlParameterSource param = new MapSqlParameterSource().addValue("id",id);
+
+            template.query(sql,param,locationRowMapper);
+            return true;
+
+        }catch (Exception e){
+return false;
+        }
+    }
 }

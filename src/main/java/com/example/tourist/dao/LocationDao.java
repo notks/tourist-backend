@@ -1,14 +1,17 @@
 package com.example.tourist.dao;
 
 import com.example.tourist.model.Location;
+import com.example.tourist.model.NewLocation;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface LocationDao {
 
-    int insertLocation(Location location);
+    int insertLocation(NewLocation location);
     List<Location> getLocationByName(String name);
-    Optional<Location> getLocationByImportance(String status);
+    List<Location> getLocationByImportance(String status);
+    List<Location> getAllLocations();
+    boolean removeLocation(int id);
 
 }
