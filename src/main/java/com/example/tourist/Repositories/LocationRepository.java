@@ -3,7 +3,6 @@ package com.example.tourist.Repositories;
 import com.example.tourist.dao.LocationDao;
 import com.example.tourist.model.Location;
 import com.example.tourist.model.NewLocation;
-import com.example.tourist.model.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,10 +10,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 @Repository("postgres")
 
 public class LocationRepository implements LocationDao {
@@ -52,48 +50,39 @@ return 0;
     @Override
     public List<Location> getLocationByName(String name){
         final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id WHERE Locations.name=:name and Locations.status='active'";
-List<Location> locations= new ArrayList<>();
 
-System.out.println("2");
+
 SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("name", name);
-        locations=template.query(sql,param,locationRowMapper);
-        System.out.println(locations);
-        return locations;
+        return template.query(sql,param,locationRowMapper);
 
     }
 
-    private RowMapper<Location> locationRowMapper =((rs, rowNum) -> {
-        return new Location(rs.getString("name")
-                ,rs.getString("description")
-                ,rs.getDouble("longitude")
-                ,rs.getDouble("latitude")
-                ,rs.getString("status")
-                ,rs.getString("importance_status")
-                ,rs.getString("cityName")
-                ,rs.getString("countryName")
-                ,rs.getTimestamp("created_at")
-                ,rs.getInt("id")
-                );
-    });
+    private final RowMapper<Location> locationRowMapper =((rs, rowNum) -> new Location(rs.getString("name")
+            ,rs.getString("description")
+            ,rs.getDouble("longitude")
+            ,rs.getDouble("latitude")
+            ,rs.getString("status")
+            ,rs.getString("importance_status")
+            ,rs.getString("cityName")
+            ,rs.getString("countryName")
+            ,rs.getTimestamp("created_at")
+            ,rs.getInt("id")
+            ));
 
     @Override
     public List<Location> getLocationByImportance(String status) {
         final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id WHERE Locations.importance_status=:status and Locations.status='active'";
         SqlParameterSource param = new MapSqlParameterSource().addValue("status",status);
 
-        List<Location>locations =new ArrayList<Location>();
-        locations=template.query(sql,param,locationRowMapper);
-        return locations;
+        return template.query(sql,param,locationRowMapper);
     }
 
     @Override
     public List<Location> getAllLocations() {
         final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id where Locations.status='active'";
 
-        List<Location>locations =new ArrayList<Location>();
-        locations=template.query(sql,locationRowMapper);
-        return locations;
+        return template.query(sql,locationRowMapper);
     }
 
     @Override

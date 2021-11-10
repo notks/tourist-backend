@@ -1,6 +1,7 @@
 package com.example.tourist.service;
 
 import com.example.tourist.dao.UserDao;
+import com.example.tourist.model.NewUser;
 import com.example.tourist.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +19,7 @@ public class UserService {
     public String getUser(String email, String password){
     return userDao.validateUser(email,password);
     }
-    public User registerUser(User user){
+    public NewUser registerUser(NewUser user){
     return userDao.registerUser(user);
     }
     public String test(String email,String password){
@@ -27,7 +28,7 @@ public class UserService {
 
     }
     public String getToken(String email,String password){
-    System.out.println("aaaaaaaaaa");
+
    return userDao.generateJWT(userDao.findUser(email,password));
 
     }
