@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
-@RequestMapping("locations")
+@RequestMapping("api/protected/locations")
+@CrossOrigin(origins = "*")
 @RestController
 public class LocationController {
     private final LocationService locationService;
@@ -42,7 +43,7 @@ public class LocationController {
     int userid=(Integer) request.getAttribute("id");
     return "Id is: "+ userid;
    }
-   @GetMapping(path = "delete")
+   @DeleteMapping(path = "delete")
    int deleteLocationById(@RequestParam("id") int id){
     return locationService.deleteLocationById(id);
    }
