@@ -29,36 +29,35 @@ import java.util.Optional;
 public class UserRepository implements UserDao {
 
     @Autowired
-JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     @Override
     public String generateJWT(User user) throws EtAuthException {
 
 
-if(user==null){
-    return null;
-}
-        long timestamp=System.currentTimeMillis();
+        if (user == null) {
+            return null;
+        }
+        long timestamp = System.currentTimeMillis();
         return Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECURITY_KEY)
                 .setIssuedAt(new Date(timestamp))
-                .setExpiration(new Date(timestamp+Constants.TOKEN_VALIDITY))
-                .claim("email",user.getEmail())
-                .claim("id",user.getId())
+                .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
+                .claim("email", user.getEmail())
+                .claim("id", user.getId())
                 .compact();
 
     }
 
     @Override
     public String validateUser(String email, String password) throws EtAuthException {
-        String sql="select email,password from Users where email=?;";
-        String token="no token";
+        String sql = "select email,password from Users where email=?;";
+        String token = "no token";
         User user = jdbcTemplate.queryForObject(
-                sql, new Object[] { email }, userRowMapper);
+                sql, new Object[]{email}, userRowMapper);
 
 
-
-        if(!BCrypt.checkpw(password,user.getPassword())){
-token=this.generateJWT(user);
+        if (!BCrypt.checkpw(password, user.getPassword())) {
+            token = this.generateJWT(user);
         }
 
 
@@ -67,20 +66,18 @@ token=this.generateJWT(user);
 
     @Override
     public NewUser registerUser(NewUser user) throws EtAuthException {
-       String sql="insert into Users (password,email,created_at) values (?,?,now())";
-        String sql2="select count(*) from Users where email=?;";
-        System.out.println(user.getEmail());
-        System.out.println(user.getPassword());
-        int count=jdbcTemplate.queryForObject(
-                sql2, new Object[] { user.getEmail() },Integer.class);
-System.out.println(count);
-        if( count!=0){
+        String sql = "insert into Users (password,email,created_at) values (?,?,now())";
+        String sql2 = "select count(*) from Users where email=?;";
+
+        int count = jdbcTemplate.queryForObject(
+                sql2, new Object[]{user.getEmail()}, Integer.class);
+
+        if (count != 0) {
             return null;
         }
-       System.out.println(user.getEmail());
-        System.out.println(user.getPassword());
-         jdbcTemplate.update(
-                sql, BCrypt.hashpw(user.getPassword(),BCrypt.gensalt(10)),user.getEmail());
+
+        jdbcTemplate.update(
+                sql, BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10)), user.getEmail());
         return user;
     }
 
@@ -94,34 +91,30 @@ System.out.println(count);
         return 0;
     }
 
-    private final RowMapper<User> userRowMapper =((rs, rowNum) -> {
+    private final RowMapper<User> userRowMapper = ((rs, rowNum) -> {
         return new User(rs.getString("email"),
-                rs.getString("password"),Integer.parseInt(rs.getString("id")));
+                rs.getString("password"), Integer.parseInt(rs.getString("id")));
     });
 
 
     public User findUser(String email, String password) throws EtAuthException {
         String sql = "select email,password,id from Users where email=?;";
-        String sql2="select count(*) from Users where email=?;";
-        System.out.println("finding user...");
+        String sql2 = "select count(*) from Users where email=?;";
 
-        int count=jdbcTemplate.queryForObject(
-                sql2, new Object[] { email},Integer.class);
+        int count = jdbcTemplate.queryForObject(
+                sql2, new Object[]{email}, Integer.class);
 
-        if(count<1){
-            System.out.println("No user found");
+        if (count < 1) {
             return null;
-            }
+        }
         User user = jdbcTemplate.queryForObject(
                 sql, new Object[]{email}, userRowMapper);
         if (BCrypt.checkpw(password, user.getPassword())) {
-            System.out.println("user found");
             return user;
 
 
         }
 
-        System.out.println("NO MATCHING PW");
         return null;
 
     }

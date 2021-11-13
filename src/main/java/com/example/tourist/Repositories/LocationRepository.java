@@ -24,7 +24,7 @@ NamedParameterJdbcTemplate template;
     }
 
     @Override
-    public int insertLocation(NewLocation location){
+    public boolean insertLocation(NewLocation location){
         final String sql = "insert into Locations(name, country_id , description,longitude,latitude,created_at,status,importance_status,city_id) values(:name, :country_id , :description,:longitude,:latitude,:created_at,:status,:importance_status,:city_id)";
 
         SqlParameterSource param = new MapSqlParameterSource()
@@ -35,15 +35,15 @@ NamedParameterJdbcTemplate template;
                 .addValue("longitude",location.getLongitude())
                 .addValue("created_at",new Timestamp(new Date().getTime()))
                 .addValue("latitude",location.getLatitude())
-                .addValue("status",location.getStatus())
+                .addValue("status","inactive")
                 .addValue("importance_status",location.getIStatus());
 
 try {
     template.update(sql,param);
-    return 0;
+    return true;
 
 }catch (Exception e){
-return 1;
+return false;
 }
     }
     @Override

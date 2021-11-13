@@ -15,14 +15,13 @@ public class LocationService {
     public LocationService(@Qualifier("postgres") LocationDao locationDao) {
         this.locationDao = locationDao;
     }
-    public int addLocation(NewLocation location){
+    public boolean addLocation(NewLocation location){
 
         return locationDao.insertLocation(location);
 
     }
  public List<Location> getByName(String name){
 
-    System.out.println("1");
     return locationDao.getLocationByName(name);
  }
  public List<Location> getByImportance(String status){

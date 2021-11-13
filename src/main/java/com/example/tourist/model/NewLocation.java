@@ -26,7 +26,6 @@ public class NewLocation {
                 @JsonProperty("description") String description,
                 @JsonProperty("long")double longitude,
                 @JsonProperty("lat") double latitude,
-                @JsonProperty("status") String status,
                 @JsonProperty("istat") String IStatus,
                 @JsonProperty("city_id") int city_id,
                 @JsonProperty("country_id") int country_id
@@ -35,7 +34,7 @@ public class NewLocation {
             Description = description;
             Longitude = longitude;
             Latitude = latitude;
-            Status = status;
+
 
             this.IStatus = IStatus;
             this.city_id = city_id;

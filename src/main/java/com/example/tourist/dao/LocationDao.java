@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface LocationDao {
 
-    int insertLocation(NewLocation location);
+    boolean insertLocation(NewLocation location);
     List<Location> getLocationByName(String name);
     List<Location> getLocationByImportance(String status);
     List<Location> getAllActiveLocations();
