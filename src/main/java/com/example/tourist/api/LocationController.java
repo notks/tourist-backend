@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("locations")
+
 
 public class LocationController {
 
@@ -32,33 +32,33 @@ if(locationService.addLocation(location))return new ResponseEntity<>(null, HttpS
 
     }
 
-    @GetMapping("/protected")
+    @GetMapping("/protected/locations")
     public List<Location> getLocations() {
         return locationService.getAllLocations();
     }
 
-    @GetMapping
+    @GetMapping("locations")
     public List<Location> getActiveAll() {
         return locationService.getAllActiveLocations();
     }
 
-    @GetMapping(path = "name/{name}")
+    @GetMapping(path = "locations/name/{name}")
     public List<Location> getLocationByName(@PathVariable("name") String name) {
 
         return locationService.getByName(name);
     }
 
-    @GetMapping(path = "importance/{status}")
+    @GetMapping(path = "locations/importance/{status}")
     public List<Location> getByImportance(@PathVariable("status") String status) {
         return locationService.getByImportance(status);
     }
 
-    @DeleteMapping("protected")
+    @DeleteMapping("protected/locations")
     int deleteLocationById(@RequestParam("id") int id) {
         return locationService.deleteLocationById(id);
     }
 
-    @PutMapping(path = "protected/status")
+    @PutMapping(path = "protected/locations/status")
     int deactivateActivate(@RequestParam("action") String action, @RequestParam("id") int id) {
         if (action.equals("activate")) {
             return locationService.activate(id);
