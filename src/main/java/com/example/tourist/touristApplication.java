@@ -5,28 +5,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.CacheControl;
+
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
-public class touristApplication implements WebMvcConfigurer {
+public class touristApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(touristApplication.class, args);
 	}
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-		// Register resource handler for images
-		registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/")
-				.setCacheControl(CacheControl.maxAge(2, TimeUnit.HOURS).cachePublic());
-	}
+
 	@Bean
 	public FilterRegistrationBean<CorsFilter> corsFilter() {
 		FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
@@ -34,6 +26,8 @@ public class touristApplication implements WebMvcConfigurer {
 		CorsConfiguration config = new CorsConfiguration();
 		config.addAllowedOrigin("*");
 		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+
 		source.registerCorsConfiguration("/**", config);
 		registrationBean.setFilter(new CorsFilter(source));
 		registrationBean.setOrder(0);
@@ -44,8 +38,9 @@ public class touristApplication implements WebMvcConfigurer {
 		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
 		AuthFilter authFilter = new AuthFilter();
 		registrationBean.setFilter(authFilter);
-		registrationBean.addUrlPatterns("/api/protected/*");
+		registrationBean.addUrlPatterns("/protected/*");
 		return registrationBean;
 	}
+
 
 }

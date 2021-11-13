@@ -22,12 +22,10 @@ public class AuthFilter extends GenericFilterBean {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
         String authHeader = httpRequest.getHeader("Authorization");
-        System.out.println(authHeader);
         if(authHeader != null) {
             String[] authHeaderArr = authHeader.split("Bearer ");
             if(authHeaderArr.length > 1 && authHeaderArr[1] != null) {
                 String token = authHeaderArr[1];
-                System.out.println(token);
                 try {
                     Claims claims = Jwts.parser().setSigningKey(Constants.API_SECURITY_KEY)
                             .parseClaimsJws(token).getBody();

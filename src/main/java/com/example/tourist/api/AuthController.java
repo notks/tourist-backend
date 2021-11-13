@@ -18,28 +18,26 @@ public class AuthController {
 
 
     private final UserService userService;
-@Autowired
+
+    @Autowired
     public AuthController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping()
-    public Map<String,String> getUserToken (@RequestParam("email") String email, @RequestParam("pwd") String password){
-        Map<String,String> response=new HashMap<>();
 
-        response.put("token",userService.getToken(email,password));
-     return response;
-
+    @PostMapping
+    public Map<String, String> getUserToken(@RequestParam("email") String email, @RequestParam("pwd") String password) {
+        Map<String, String> response = new HashMap<>();
+        response.put("token", userService.getToken(email, password));
+        return response;
     }
 
-@PostMapping(path = "register")
-    public ResponseEntity<?> registerUser(@RequestBody NewUser user){
-
-    NewUser test=userService.registerUser(user);
-    if(test!=null){
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-    return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-
-
+    @PostMapping(path = "register")
+    public ResponseEntity<?> registerUser(@RequestParam("email") String email, @RequestParam("pwd") String password) {
+        NewUser user = new NewUser(email, password);
+        NewUser test = userService.registerUser(user);
+        if (test != null) {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.CONFLICT);
     }
 }
