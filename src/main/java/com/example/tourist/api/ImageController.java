@@ -2,30 +2,37 @@ package com.example.tourist.api;
 
 import com.example.tourist.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("picture")
+@RequestMapping("image")
 public class ImageController {
     private final ImageService imageService;
-@Autowired
+
+    @Autowired
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
 
     @PostMapping
-    @CrossOrigin(origins = "http://127.0.0.1:8080/picture")
 
-    public String saveImage( @RequestParam("file") MultipartFile file,@RequestParam("locationId") int id){
-        System.out.println("1");
-        System.out.println(file.getOriginalFilename());
-        return imageService.savePicture(file,id);
+    public ResponseEntity<?> saveImage(@RequestParam("file") MultipartFile file, @RequestParam("locationId") int id) {
+        imageService.savePicture(file, id);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
+
     @GetMapping()
-    public List<String> getImages(int id){
-    return imageService.getAllLocationImages(id);
+    public Map<String, List<String>> getImages(int id) {
+        HashMap<String, List<String>> response = new HashMap<>();
+        response.put("url", imageService.getAllLocationImages(id));
+        return response;
     }
+
 }

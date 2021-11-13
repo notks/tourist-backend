@@ -28,7 +28,6 @@ public class NewLocation {
                 @JsonProperty("lat") double latitude,
                 @JsonProperty("status") String status,
                 @JsonProperty("istat") String IStatus,
-
                 @JsonProperty("city_id") int city_id,
                 @JsonProperty("country_id") int country_id
                 ) {

@@ -27,7 +27,6 @@ NamedParameterJdbcTemplate template;
     public int insertLocation(NewLocation location){
         final String sql = "insert into Locations(name, country_id , description,longitude,latitude,created_at,status,importance_status,city_id) values(:name, :country_id , :description,:longitude,:latitude,:created_at,:status,:importance_status,:city_id)";
 
-
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("name", location.getName())
                 .addValue("country_id", location.getCountry_id())
@@ -36,15 +35,15 @@ NamedParameterJdbcTemplate template;
                 .addValue("longitude",location.getLongitude())
                 .addValue("created_at",new Timestamp(new Date().getTime()))
                 .addValue("latitude",location.getLatitude())
-                        .addValue("status",location.getStatus())
-                                .addValue("importance_status",location.getIStatus());
+                .addValue("status",location.getStatus())
+                .addValue("importance_status",location.getIStatus());
 
 try {
     template.update(sql,param);
-    return 1;
+    return 0;
 
 }catch (Exception e){
-return 0;
+return 1;
 }
     }
     @Override
@@ -52,8 +51,7 @@ return 0;
         final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id WHERE Locations.name=:name and Locations.status='active'";
 
 
-SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("name", name);
+SqlParameterSource param = new MapSqlParameterSource().addValue("name", name);
         return template.query(sql,param,locationRowMapper);
 
     }
@@ -80,6 +78,13 @@ SqlParameterSource param = new MapSqlParameterSource()
 
     @Override
     public List<Location> getAllLocations() {
+        final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id;";
+
+        return template.query(sql,locationRowMapper);
+    }
+
+    @Override
+    public List<Location> getAllActiveLocations() {
         final String sql = "SELECT Locations.*,Cities.\"cityName\" as cityName ,Countries.name as countryName FROM Locations LEFT JOIN Cities ON Locations.city_id = Cities.id LEFT JOIN Countries ON Cities.country_id = Countries.id where Locations.status='active'";
 
         return template.query(sql,locationRowMapper);
@@ -87,15 +92,40 @@ SqlParameterSource param = new MapSqlParameterSource()
 
     @Override
     public boolean removeLocation(int id) {
+
         String sql="delete from Locations where id=:id";
+        String sql2="delete from Ratings where location_id=:id";
+        String sql3="delete from Pictures where location_id=:id";
         try {
             SqlParameterSource param = new MapSqlParameterSource().addValue("id",id);
+            template.update(sql3,param);
+            template.update(sql2,param);
+            template.update(sql,param);
 
-            template.query(sql,param,locationRowMapper);
             return true;
 
         }catch (Exception e){
 return false;
         }
+    }
+
+    @Override
+    public boolean activate(int id) {
+        String sql="update  Locations set status='active' where id=:id;";
+
+        SqlParameterSource param = new MapSqlParameterSource().addValue("id",id);
+
+        template.update(sql,param);
+        return true;
+    }
+
+    @Override
+    public boolean deactivate(int id) {
+        String sql="update  Locations set status='inactive' where id=:id;";
+
+        SqlParameterSource param = new MapSqlParameterSource().addValue("id",id);
+
+        template.update(sql,param);
+        return true;
     }
 }
