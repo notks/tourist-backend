@@ -5,13 +5,15 @@ import com.example.tourist.model.NewLocation;
 import com.example.tourist.service.LocationService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("locations")
+
 
 public class LocationController {
 
@@ -23,39 +25,40 @@ public class LocationController {
     }
 
 
-    @PostMapping("/protected/")
-    public void addLocation(@RequestBody NewLocation location) {
+    @PostMapping("/protected")
+    public ResponseEntity<?> addLocation(@RequestBody NewLocation location) {
 
-        locationService.addLocation(location);
+if(locationService.addLocation(location))return new ResponseEntity<>(null, HttpStatus.CREATED);else return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+
     }
 
-    @GetMapping("/protected")
+    @GetMapping("/protected/locations")
     public List<Location> getLocations() {
         return locationService.getAllLocations();
     }
 
-    @GetMapping
+    @GetMapping("locations")
     public List<Location> getActiveAll() {
         return locationService.getAllActiveLocations();
     }
 
-    @GetMapping(path = "name/{name}")
+    @GetMapping(path = "locations/name/{name}")
     public List<Location> getLocationByName(@PathVariable("name") String name) {
-        System.out.println("0");
+
         return locationService.getByName(name);
     }
 
-    @GetMapping(path = "importance/{status}")
+    @GetMapping(path = "locations/importance/{status}")
     public List<Location> getByImportance(@PathVariable("status") String status) {
         return locationService.getByImportance(status);
     }
 
-    @DeleteMapping
+    @DeleteMapping("protected/locations")
     int deleteLocationById(@RequestParam("id") int id) {
         return locationService.deleteLocationById(id);
     }
 
-    @PutMapping(path = "status")
+    @PutMapping(path = "protected/locations/status")
     int deactivateActivate(@RequestParam("action") String action, @RequestParam("id") int id) {
         if (action.equals("activate")) {
             return locationService.activate(id);

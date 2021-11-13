@@ -1,5 +1,6 @@
 package com.example.tourist.service;
 
+import com.example.tourist.model.Country;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -32,14 +33,14 @@ return false;
         }
 
     }
-    public List<String> getAllCountries(){
-        final String sql = "select * from Countries;";
+    public List<Country> getAllCountries(){
+        final String sql = "select * from Countries order by name;";
 
 
 
         try {
-            return template.query(sql,(rs, rowNum) ->
-                    rs.getString("name")
+            return template.query(sql,(rs, rowNum) ->new Country(rs.getString("name"),rs.getInt("id"))
+
             );
         }catch (Exception e){
             return null;

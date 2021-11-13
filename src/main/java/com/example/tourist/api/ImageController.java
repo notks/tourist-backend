@@ -21,7 +21,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping
+    @PostMapping(path ="protected" )
 
     public ResponseEntity<?> saveImage(@RequestParam("file") MultipartFile file, @RequestParam("locationId") int id) {
         imageService.savePicture(file, id);
