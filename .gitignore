@@ -3,8 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-!**/src/main/resources/application.properties
-!**/src/main/resources/google-services.json
+
+
 ### STS ###
 .apt_generated
 .classpath
@@ -32,3 +32,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/tourist-40c97-firebase-adminsdk-he8mj-6b85e12c3f.json
+/src/main/resources/application.properties

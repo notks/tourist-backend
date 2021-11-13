@@ -39,14 +39,13 @@ if(user==null){
     return null;
 }
         long timestamp=System.currentTimeMillis();
-        System.out.println(user.getEmail());
-        String token= Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECURITY_KEY)
+        return Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECURITY_KEY)
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp+Constants.TOKEN_VALIDITY))
                 .claim("email",user.getEmail())
                 .claim("id",user.getId())
                 .compact();
-                return token;
+
     }
 
     @Override
@@ -55,7 +54,7 @@ if(user==null){
         String token="no token";
         User user = jdbcTemplate.queryForObject(
                 sql, new Object[] { email }, userRowMapper);
-        System.out.println(user.getEmail());
+
 
 
         if(!BCrypt.checkpw(password,user.getPassword())){

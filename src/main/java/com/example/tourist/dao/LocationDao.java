@@ -11,7 +11,11 @@ public interface LocationDao {
     int insertLocation(NewLocation location);
     List<Location> getLocationByName(String name);
     List<Location> getLocationByImportance(String status);
+    List<Location> getAllActiveLocations();
     List<Location> getAllLocations();
+
     boolean removeLocation(int id);
+    boolean activate(int id);
+    boolean deactivate(int id);
 
 }
